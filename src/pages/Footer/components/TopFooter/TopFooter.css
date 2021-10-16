@@ -1,0 +1,20 @@
+#top-footer{
+    background-image: url('../../../../carousel-pic/images3.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.overlay{
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.703);
+}
+.top-input{
+    outline: none;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: transparent;
+    border: none;
+    border: 1px solid gray;
+    color: white;
+}

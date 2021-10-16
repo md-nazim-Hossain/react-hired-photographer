@@ -1,0 +1,13 @@
+#service-img{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+}
+.text-justify{
+    text-align: justify;
+}
+.icon{
+    width: 20px;
+    display: inline;
+    padding: 3px;
+}

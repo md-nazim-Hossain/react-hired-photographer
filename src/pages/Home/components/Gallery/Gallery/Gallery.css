@@ -1,0 +1,17 @@
+.gallery-img{
+    width: 100%;
+    height: 100%;
+    display: block;
+    transition: 0.5s ease-in-out;
+}
+.gallery-img:hover{
+   transform:scale(90%);
+}
+.bg{
+    display: none;
+    background-color: rgba(0, 0, 0, 0.63);
+    transition: 0.5s ease-in-out;
+}
+.gallery-img:hover >.bg{
+    display: block;
+}
