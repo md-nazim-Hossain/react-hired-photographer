@@ -7,25 +7,59 @@ import './Register.css'
 
 const Register = () => {
     const [active,setActive] = useState(false);
-    const {error,signInGoogle,handleName,handlePhone,handleEmail,handlePassword,handleRegister,
-        handleSignIn,handlePasswordReset} = useAuth();
+    const [user,setUser] = useState({});
+    const [signInUser,setSignInUser] = useState({});
+
+    const {error,signInGoogle,createUser,signUser,userResetPassword} = useAuth();
     
     const location = useLocation();
     const redirect_url = location.state?.from || '/home';
     const history = useHistory();
 
+    const handleField = e =>{
+        const field = e.target.field;
+        const value = e.target.value;
+        const newUser = {...user};
+        newUser[field] = value;
+        setUser(newUser);
+    };
+
+    const handleSignField = e =>{
+        const field = e.target.field;
+        const value = e.target.value;
+        const newUser = {...user};
+        newUser[field] = value;
+        setSignInUser(newUser);
+    };
+
+   const {name,email,phone,password} = user;
+
+    // firebase function
     const handleRedirect = () =>{
-        signInGoogle()
-        .then(result =>{
-            history.push(redirect_url);
-        });
+        signInGoogle(history,redirect_url)
+    };
+
+    const handleRegister = e =>{
+        createUser(email,password,name,phone,history,redirect_url)
+        e.preventDefault();
     }
+
+    const handleSignIn = e =>{
+        signUser(signInUser.email,signInUser.password,history,redirect_url)
+        e.preventDefault();
+    }
+
+    const handlePasswordReset = () =>{
+        userResetPassword(email)
+    }
+    // toogle function
     const handleSignUpForm = () =>{
         setActive(true);
     }
     const handleSignInForm = () =>{
         setActive(false);
-    }
+    };
+
     return (
         <Container className='py-5'>
             <h2 className='text-center py-3'>Please <span className='text-danger'>{!active ? "Register":"Sign In"}</span></h2>
@@ -34,25 +68,25 @@ const Register = () => {
                 {!active ?<Form onSubmit = {handleRegister}>
                     <Form.Group as={Row} className="mb-3" >
                         <Col sm={12}>
-                            <Form.Control onBlur={handleName} type="text" placeholder="Username" required className='border-right'/>
+                            <Form.Control name="name" onBlur={handleField} type="text" placeholder="Username" required className='border-right'/>
                         </Col>
                     </Form.Group>
 
                     <Form.Group as={Row} className="mb-3" >
                         <Col sm={12}>
-                            <Form.Control onBlur={handlePhone} type="number" placeholder="Phone" />
+                            <Form.Control name="phone" onBlur={handleField} type="number" placeholder="Phone" />
                         </Col>
                     </Form.Group>
                 
                     <Form.Group as={Row} className="mb-3" >
                         <Col sm={12}>
-                            <Form.Control onBlur={handleEmail} type="email" placeholder="Email" required className='border-right'/>
+                            <Form.Control name="email" onBlur={handleField} type="email" placeholder="Email" required className='border-right'/>
                         </Col>
                     </Form.Group>
 
                     <Form.Group as={Row} className="mb-3">
                         <Col sm={12}>
-                            <Form.Control onBlur={handlePassword} type="password" placeholder="Password" required className='border-right'/>
+                            <Form.Control name="password" onBlur={handleField} type="password" placeholder="Password" required className='border-right'/>
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} className="mb-3">
@@ -70,13 +104,13 @@ const Register = () => {
                 <Form onSubmit={handleSignIn}>
                     <Form.Group as={Row} className="mb-3" >
                         <Col sm={12}>
-                            <Form.Control onBlur={handleEmail} type="email" placeholder="Email" required />
+                            <Form.Control name='email' onBlur={handleSignField} type="email" placeholder="Email" required />
                         </Col>
                     </Form.Group>
 
                     <Form.Group as={Row} className="mb-3">
                         <Col sm={12}>
-                            <Form.Control onBlur={handlePassword} type="password" placeholder="Password" required/>
+                            <Form.Control name="password" onBlur={handleSignField} type="password" placeholder="Password" required/>
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} className="mb-3">

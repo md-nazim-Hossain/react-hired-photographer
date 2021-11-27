@@ -9,17 +9,24 @@ initFirebaseConfig();
 const useFirebase = () =>{
 
     const [user,setUser] = useState({});
-    const [name,setName] = useState("");
-    const [phone,setPhone] = useState("");
-    const [email,setEmail] = useState("");
-    const [password,setPassword] = useState("");
-    const [error,setError] = useState('')
+    const [error,setError] = useState('');
+    const [isLoading,setIsLoading] = useState(true);
 
     const googleProvider = new GoogleAuthProvider();
     const auth = getAuth();
 
-    const signInGoogle = () =>{
-        return signInWithPopup(auth,googleProvider)
+    const signInGoogle = (history,redirect_url) =>{
+        setIsLoading(true)
+        signInWithPopup(auth,googleProvider)
+        .then(result =>{
+            setUser(result.user);
+            history.push(redirect_url);
+            setError('');
+        }).catch(e =>{
+            setError(e.message);
+        }).finally(() =>{
+            setIsLoading(false);
+        })
     }
 
     const signOutClick = () =>{
@@ -34,90 +41,81 @@ const useFirebase = () =>{
     }
 
     useEffect(() =>{
-        onAuthStateChanged(auth,user=>{
+        setIsLoading(true)
+        const subscriber = onAuthStateChanged(auth,user=>{
             if(user){
                 setUser(user)
+            }else{
+                setUser({});
             }
-        })
-    },[]);
-
-    // set data on the state
-    const handleName = e =>{
-        setName(e.target.value);
-    }
-    const handlePhone = e =>{
-        setPhone(e.target.value);
-    }
-    const handleEmail = e =>{
-        setEmail(e.target.value);
-    }
-    const handlePassword = e =>{
-        const pass = e.target.value;
-        const err = 'Password Must have ';
-        if(pass.length < 6){
-            setError(err+'6 character length');
-        }
-        else if(!/(?=.*?[A-Z]*[A-Z])/.test(pass)){
-            setError(err+'Two UpperCase letter')
-        }
-        else{
-            setPassword(e.target.value);
-            setError('')
-        } 
-    }
+            setIsLoading(false);
+        });
+        return subscriber;
+    },[auth]);
+    
     /// create user with firebase
-    const handleRegister = e =>{
-        e.preventDefault();
+    const createUser = (email,password,name,phone,history,redirect_url) =>{
+        setIsLoading(true);
         createUserWithEmailAndPassword(auth,email,password)
         .then(result =>{
-            handleUpdate();
+            handleUpdate(name,phone);
             setError('');
-            console.log(result.user);
+            history.push(redirect_url);
         }).catch(e =>{
             setError(e.message);
-        });
-    }
-
-    const handleSignIn = () =>{
-        signInWithEmailAndPassword(auth, email, password)
-        .then(result =>{
-            setUser(result.user)
-            setError('')
-        }).catch(e =>{
-            setError(e.message)
+        }).finally(() =>{
+            setIsLoading(false);
         })
     }
 
-    const handleUpdate =  () =>{
+    const signUser = (email,password,history,redirect_url) =>{
+        setIsLoading(true);
+        signInWithEmailAndPassword(auth, email, password)
+        .then(result =>{
+            setUser(result.user);
+            history.push(redirect_url);
+            setError('')
+        }).catch(e =>{
+            setError(e.message);
+        }).finally(() =>{
+            setIsLoading(false);
+        })
+    }
+
+    const handleUpdate =  (name,phone) =>{
+        setIsLoading(true);
         updateProfile(auth.currentUser, {
             displayName:name,photoURL:user.photoURL ||"https://lh3.googleusercontent.com/a-/AOh14GjFagRswZECmhBi_rUYm9C4I-G6uGbq5BnS8wxLsg=s96-c",
             phoneNumber:phone
         }).then(()=>{setError('');})
         .catch(e =>{
             setError(e.message)
+        }).finally(() =>{
+            setIsLoading(false)
         })
     }
 
-    const handlePasswordReset = () =>{
+    const userResetPassword = (email) =>{
+        setIsLoading(true)
         sendPasswordResetEmail(auth, email)
         .then(result =>{
             setError(' ');
         }).catch(e =>{
             setError(e.message)
-        })
+        }).finally(() =>{
+            setIsLoading(false)
+        });
     }
     return {
         user,
         error,
+        isLoading,
+        setIsLoading,
         signInGoogle,
         signOutClick,
-        handleName,
-        handlePhone,
-        handleEmail,
-        handlePassword,
-        handleRegister,
-        handleSignIn,
-        handlePasswordReset
+        createUser,
+        signUser,
+        userResetPassword
     }
 }
 
