@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
-import { useHistory, useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../../../../hooks/useAuth';
 import './Register.css'
 
@@ -14,7 +14,7 @@ const Register = () => {
     
     const location = useLocation();
     const redirect_url = location.state?.from || '/home';
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const handleField = e =>{
         const field = e.target.field;
@@ -36,16 +36,16 @@ const Register = () => {
 
     // firebase function
     const handleRedirect = () =>{
-        signInGoogle(history,redirect_url)
+        signInGoogle(navigate,redirect_url)
     };
 
     const handleRegister = e =>{
-        createUser(email,password,name,phone,history,redirect_url)
+        createUser(email,password,name,phone,navigate,redirect_url)
         e.preventDefault();
     }
 
     const handleSignIn = e =>{
-        signUser(signInUser.email,signInUser.password,history,redirect_url)
+        signUser(signInUser.email,signInUser.password,navigate,redirect_url)
         e.preventDefault();
     }
 

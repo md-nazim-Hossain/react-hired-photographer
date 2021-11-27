@@ -1,13 +1,21 @@
 import React from 'react';
-import { Container, Row,Button } from 'react-bootstrap';
+import { Container, Row,Button, Spinner } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
+import useAuth from '../../../hooks/useAuth';
 import useFetch from '../../../hooks/useFetch';
 import HomeService from '../../Home/components/HomeService/HomeService';
 
 const Services = () => {
     const {useService} = useFetch()
     const [services] = useService();
- 
+    const {isLoading} = useAuth();
+    
+    if(isLoading){
+        return <div className='p-5 text-center'>
+                    <Spinner animation="grow" />
+                </div>
+    };
+
     return (
         <Container className='py-5'>
             <h2 className='text-center py-5'>Our <span className='text-danger'>Services</span></h2>

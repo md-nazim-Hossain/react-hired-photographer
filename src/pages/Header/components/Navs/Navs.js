@@ -1,20 +1,15 @@
 import React from 'react';
 import { Button, Container, Nav, Navbar } from 'react-bootstrap';
-import { useHistory } from 'react-router';
-import { NavLink } from 'react-router-dom';
+import { NavLink,useNavigate } from 'react-router-dom';
 import useAuth from '../../../../hooks/useAuth';
 
 const Navs = () => {
     const {user,signOutClick} = useAuth();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const register = () =>{
-        history.push('/register');
+        navigate('/register');
     };
-
-    const activeStyle = {
-        color:"red"
-    }
 
     const sizeImg = {
         width:'30px',
@@ -28,10 +23,11 @@ const Navs = () => {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="me-auto">
-                    <Nav.Link as={NavLink} activeStyle={activeStyle} to="/home">Home</Nav.Link>
-                    <Nav.Link as={NavLink} activeStyle={activeStyle} to="/service">Service</Nav.Link>
-                    <Nav.Link as={NavLink} activeStyle={activeStyle} to="/gallery">Gallery</Nav.Link>
-                    <Nav.Link as={NavLink} activeStyle={activeStyle} to="/register">Register</Nav.Link>
+                    <Nav.Link as={NavLink} to="/home">Home</Nav.Link>
+                    <Nav.Link as={NavLink} to="/service">Service</Nav.Link>
+                    <Nav.Link as={NavLink} to="/gallery">Gallery</Nav.Link>
+                    <Nav.Link as={NavLink} to="/register">Register</Nav.Link>
+                    <Nav.Link as={NavLink} to="/dashboard">Dashboard</Nav.Link>
                 </Nav>
                 <Nav>
                     <Nav.Link className='text-white text-start'>

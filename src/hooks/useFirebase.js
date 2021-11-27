@@ -20,7 +20,7 @@ const useFirebase = () =>{
         signInWithPopup(auth,googleProvider)
         .then(result =>{
             setUser(result.user);
-            history.push(redirect_url);
+            history(redirect_url);
             setError('');
         }).catch(e =>{
             setError(e.message);
@@ -60,7 +60,7 @@ const useFirebase = () =>{
         .then(result =>{
             handleUpdate(name,phone);
             setError('');
-            history.push(redirect_url);
+            history(redirect_url);
         }).catch(e =>{
             setError(e.message);
         }).finally(() =>{
@@ -68,12 +68,12 @@ const useFirebase = () =>{
         })
     }
 
-    const signUser = (email,password,history,redirect_url) =>{
+    const signUser = (email,password,navigate,redirect_url) =>{
         setIsLoading(true);
         signInWithEmailAndPassword(auth, email, password)
         .then(result =>{
             setUser(result.user);
-            history.push(redirect_url);
+            navigate(redirect_url);
             setError('')
         }).catch(e =>{
             setError(e.message);
